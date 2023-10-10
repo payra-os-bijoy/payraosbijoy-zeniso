@@ -31,14 +31,15 @@ echo
 
 	payraosVersion='rolling'
 
-	isoLabel='PayraOS-Bijoy-'payraosVersion'-x86_64.iso'
+	isoLabel='PayraOS-Bijoy-'$payraosVersion'-x86_64.iso'
 
 	# setting of the general parameters
-	archisoRequiredVersion="archiso 73-1"
-	buildFolder=$HOME"/arcolinux-build"
-	outFolder=$HOME"/ArcoLinux-Out"
-	archisoVersion=$(sudo pacman -Q archiso)
-	
+	archisoRequiredVersion="archiso 72-1"
+	buildFolder=$HOME"/payraos-build"
+	outFolder=$HOME"/PayraOS-Out"
+        # outFolder="/mnt/hgfs/VirtualShare/Athena-Out"
+        archisoVersion=$(sudo pacman -Q archiso)
+
 	# If you are ready to use your personal repo and personal packages
 	# https://arcolinux.com/use-our-knowledge-and-create-your-own-icon-theme-combo-use-github-to-saveguard-your-work/
 	# 1. set variable personalrepo to true in this file (default:false)
@@ -94,23 +95,30 @@ echo
 			echo "Archiso is already installed"
 
 	else
-
+			sudo pacman -S --noconfirm archiso
 		#checking which helper is installed
-		if pacman -Qi yay &> /dev/null; then
+		#if pacman -Qi yay &> /dev/null; then
 
-			echo "################################################################"
-			echo "######### Installing with yay"
-			echo "################################################################"
-			yay -S --noconfirm $package
+		#	echo "################################################################"
+		#	echo "######### Installing with yay"
+		#	echo "################################################################"
+		#	yay -S --noconfirm $package
 
-		elif pacman -Qi trizen &> /dev/null; then
+		#elif pacman -Qi trizen &> /dev/null; then
 
-			echo "################################################################"
-			echo "######### Installing with trizen"
-			echo "################################################################"
-			trizen -S --noconfirm --needed --noedit $package
+		#	echo "################################################################"
+		#	echo "######### Installing with trizen"
+		#	echo "################################################################"
+		#	trizen -S --noconfirm --needed --noedit $package
 
-		fi
+		#elif pacman -Qi paru &> /dev/null; then
+
+        #                echo "################################################################"
+        #                echo "######### Installing with paru"
+        #                echo "################################################################"
+        #                paru -S --noconfirm --needed $package
+
+        #        fi
 
 		# Just checking if installation was successful
 		if pacman -Qi $package &> /dev/null; then
@@ -168,16 +176,16 @@ echo "################################################################## "
 echo
 
 	echo "Deleting any files in /etc/skel"
-	rm -rf $buildFolder/archiso/airootfs/etc/skel/.* 2> /dev/null
+	rm -rf $buildFolder/archiso/airootfs/etc/skel/.bashrc 2> /dev/null
 	echo
 
 	echo "Getting the last version of bashrc in /etc/skel"
 	echo
-	wget https://raw.githubusercontent.com/payraos-bijoy/payraosbijoy-root/main/etc/skel/.bashrc -O $buildFolder/archiso/airootfs/etc/skel/.bashrc
+	wget https://raw.githubusercontent.com/payraos-bijoy/payraosbijoy-zeniso/main/archiso/airootfs/etc/skel/.bashrc -O $buildFolder/archiso/airootfs/etc/skel/.bashrc
 
 	echo "Removing the old packages.x86_64 file from build folder"
 	rm $buildFolder/archiso/packages.x86_64
-	rm $buildFolder/archiso/packages-personal-repo.x86_64
+	#rm $buildFolder/archiso/packages-personal-repo.x86_64
 	echo
 
 	echo "Copying the new packages.x86_64 file to the build folder"
@@ -211,11 +219,11 @@ echo
 	#Setting variables
 
 	#profiledef.sh
-	oldname1='iso_name="payraos'
-	newname1='iso_name="payraos'
+	oldname1='iso_name="payraos"'
+	newname1='iso_name="payraos"'
 
-	oldname2='iso_label="PAYRA-OS-BIJOY'
-	newname2='iso_label="PAYRA-OS-BIJOY'
+	oldname2='iso_label="PAYRA-OS-BIJOY"'
+	newname2='iso_label="PAYRA-OS-BIJOY"'
 
 	oldname3='PAYRA-OS-BIJOY'
 	newname3='PAYRA-OS-BIJOY'
@@ -234,7 +242,7 @@ echo
 	sed -i 's/'$oldname2'/'$newname2'/g' $buildFolder/archiso/profiledef.sh
 	sed -i 's/'$oldname3'/'$newname3'/g' $buildFolder/archiso/airootfs/etc/dev-rel
 	sed -i 's/'$oldname4'/'$newname4'/g' $buildFolder/archiso/airootfs/etc/hostname
-# 	sed -i 's/'$oldname5'/'$newname5'/g' $buildFolder/archiso/airootfs/etc/sddm.conf
+	#sed -i 's/'$oldname5'/'$newname5'/g' $buildFolder/archiso/airootfs/etc/sddm.conf
 
 	echo "Adding time to /etc/dev-rel"
 	date_build=$(date -d now)
@@ -274,7 +282,7 @@ echo "###################################################################"
 tput setaf 2
 echo "Phase 8 :"
 echo "- Creating checksums"
-echo "- Copying pgklist"
+echo "- Copying pkglist"
 tput sgr0
 echo "###################################################################"
 echo
@@ -284,20 +292,23 @@ echo
 	echo "Creating checksums for : "$isoLabel
 	echo "##################################################################"
 	echo
-	echo "Building sha1sum"
-	echo "########################"
-	sha1sum $isoLabel | tee $isoLabel.sha1
-	echo "Building sha256sum"
-	echo "########################"
-	sha256sum $isoLabel | tee $isoLabel.sha256
 	echo "Building md5sum"
 	echo "########################"
-	md5sum $isoLabel | tee $isoLabel.md5
+	md5sum $outFolder/$isoLabel | tee $outFolder/$isoLabel.md5
+	echo "Building sha1sum"
+	echo "########################"
+	sha1sum $outFolder/$isoLabel | tee $outFolder/$isoLabel.sha1
+	echo "Building sha256sum"
+	echo "########################"
+	sha256sum $outFolder/$isoLabel | tee $outFolder/$isoLabel.sha256
+	echo "Building sha512sum"
+	echo "########################"
+	sha512sum $outFolder/$isoLabel | tee $outFolder/$isoLabel.sha512
 	echo
 	echo "Moving pkglist.x86_64.txt"
 	echo "########################"
 	cp $buildFolder/iso/arch/pkglist.x86_64.txt  $outFolder/$isoLabel".pkglist.txt"
-	
+
 echo
 echo "##################################################################"
 tput setaf 2
