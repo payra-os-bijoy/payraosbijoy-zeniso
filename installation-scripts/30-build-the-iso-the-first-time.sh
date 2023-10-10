@@ -26,12 +26,12 @@ echo
 	#Let us set the desktop"
 	#First letter of desktop is small letter
 
-	desktop="xfce"
-	dmDesktop="xfce"
+	desktop="gnome"
+	dmDesktop="gnome"
 
-	arcolinuxVersion='v23.11.02'
+	payraosVersion='rolling'
 
-	isoLabel='arcolinuxl-'$arcolinuxVersion'-x86_64.iso'
+	isoLabel='PayraOS-Bijoy-'payraosVersion'-x86_64.iso'
 
 	# setting of the general parameters
 	archisoRequiredVersion="archiso 73-1"
@@ -45,11 +45,11 @@ echo
 	# 2. change the file personal-repo to reflect your repo
 	# 3. add your applications to the file packages-personal-repo.x86_64
 
-	personalrepo=true
+	personalrepo=false
 
 	echo "################################################################## "
 	echo "Building the desktop                   : "$desktop
-	echo "Building version                       : "$arcolinuxVersion
+	echo "Building version                       : "$payraosVersion
 	echo "Iso label                              : "$isoLabel
 	echo "Do you have the right archiso version? : "$archisoVersion
 	echo "What is the required archiso version?  : "$archisoRequiredVersion
@@ -173,7 +173,7 @@ echo
 
 	echo "Getting the last version of bashrc in /etc/skel"
 	echo
-	wget https://raw.githubusercontent.com/arcolinux/arcolinux-root/master/etc/skel/.bashrc-latest -O $buildFolder/archiso/airootfs/etc/skel/.bashrc
+	wget https://raw.githubusercontent.com/payraos-bijoy/payraosbijoy-root/main/etc/skel/.bashrc -O $buildFolder/archiso/airootfs/etc/skel/.bashrc
 
 	echo "Removing the old packages.x86_64 file from build folder"
 	rm $buildFolder/archiso/packages.x86_64
@@ -211,21 +211,21 @@ echo
 	#Setting variables
 
 	#profiledef.sh
-	oldname1='iso_name="arcolinuxl'
-	newname1='iso_name="arcolinuxl'
+	oldname1='iso_name="payraos'
+	newname1='iso_name="payraos'
 
-	oldname2='iso_label="arcolinuxl'
-	newname2='iso_label="arcolinuxl'
+	oldname2='iso_label="PAYRA-OS-BIJOY'
+	newname2='iso_label="PAYRA-OS-BIJOY'
 
-	oldname3='ArcoLinuxL'
-	newname3='ArcoLinuxL'
+	oldname3='PAYRA-OS-BIJOY'
+	newname3='PAYRA-OS-BIJOY'
 
 	#hostname
-	oldname4='ArcoLinuxL'
-	newname4='ArcoLinuxL'
+	oldname4='payraosbijoy'
+	newname4='payraosbijoy'
 
 	#sddm.conf user-session
-	oldname5='Session=xfce'
+	oldname5='Session=gnome'
 	newname5='Session='$dmDesktop
 
 	echo "Changing all references"
@@ -234,7 +234,7 @@ echo
 	sed -i 's/'$oldname2'/'$newname2'/g' $buildFolder/archiso/profiledef.sh
 	sed -i 's/'$oldname3'/'$newname3'/g' $buildFolder/archiso/airootfs/etc/dev-rel
 	sed -i 's/'$oldname4'/'$newname4'/g' $buildFolder/archiso/airootfs/etc/hostname
-	sed -i 's/'$oldname5'/'$newname5'/g' $buildFolder/archiso/airootfs/etc/sddm.conf
+# 	sed -i 's/'$oldname5'/'$newname5'/g' $buildFolder/archiso/airootfs/etc/sddm.conf
 
 	echo "Adding time to /etc/dev-rel"
 	date_build=$(date -d now)

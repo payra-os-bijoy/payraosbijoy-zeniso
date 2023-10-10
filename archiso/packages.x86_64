@@ -17,6 +17,7 @@ broadcom-wl
 #ddrescue
 #dhclient
 dhcpcd
+calamares
 #diffutils
 #dmidecode
 #dmraid
@@ -167,8 +168,9 @@ chaotic-keyring
 chaotic-mirrorlist
 noto-fonts
 noto-fonts-emoji
+
 ## PAYRA OS BIJOY PKGS
-payraosbijoy-gnome-config
-payraosbijoy-gdm-config
-payraosbijoy-neofetch-config
-payraosbijoy-system-config
+#payraosbijoy-gnome-config
+#payraosbijoy-gdm-config
+#payraosbijoy-neofetch-config
+#payraosbijoy-system-config
